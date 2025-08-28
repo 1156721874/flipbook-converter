@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: flipbook-config
+  namespace: flipbook-converter
+data:
+  DEBUG: "false"
+  DATABASE_URL: "sqlite:///./data/flipbook.db"
+  REDIS_URL: "redis://redis-service:6379"
+  PDF_DPI: "200"
+  IMAGE_MAX_WIDTH: "1920"
+  IMAGE_MAX_HEIGHT: "1080"
+  IMAGE_QUALITY: "85"
