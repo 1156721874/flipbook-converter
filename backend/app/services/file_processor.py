@@ -75,7 +75,7 @@ class FileProcessor:
                 pix.save(img_path)
                 
                 # 优化图片尺寸
-                optimized_path = await self._optimize_image(img_path, temp_dir, page_num + 1)
+                optimized_path =  self._optimize_image_sync(img_path, temp_dir, page_num + 1)
                 pages.append((page_num + 1, optimized_path))
             
             doc.close()
@@ -118,7 +118,7 @@ class FileProcessor:
                 # 读取Word文档内容
                 doc = docx.Document(word_path)
                 text_content = "\n".join([paragraph.text for paragraph in doc.paragraphs])
-                
+                safe_text = text_content.replace('\n', '<br>')
                 # 转为HTML
                 html_content = f"""
                 <html>
@@ -129,7 +129,7 @@ class FileProcessor:
                     </style>
                 </head>
                 <body>
-                    {text_content.replace('\n', '<br>')}
+                    {safe_text}
                 </body>
                 </html>
                 """
@@ -206,3 +206,21 @@ class FileProcessor:
         
         loop = asyncio.get_event_loop()
         return await loop.run_in_executor(self.executor, optimize_sync)
+
+
+    def _optimize_image_sync(self, image_path: str, temp_dir: str, page_num: int) -> str:
+        """同步函数：实际执行图像优化"""
+        try:
+            img = Image.open(image_path)
+
+            # 调整尺寸但保持宽高比
+            img.thumbnail((settings.IMAGE_MAX_WIDTH, settings.IMAGE_MAX_HEIGHT), Image.Resampling.LANCZOS)
+
+            # 保存优化后的图片
+            optimized_path = os.path.join(temp_dir, f"optimized_page_{page_num}.png")
+            img.save(optimized_path, "PNG", quality=settings.IMAGE_QUALITY, optimize=True)
+
+            return optimized_path
+        except Exception as e:
+            logger.error(f"Image optimization error: {e}")
+            return image_path  # 返回原图片路径

@@ -12,11 +12,6 @@ import logging
 from app.core.config import settings
 from app.core.database import get_db, engine
 from app.models.database import Base
-from app.services.file_processor import FileProcessor
-from app.services.storage_service import StorageService
-from app.services.task_service import TaskService
-from app.schemas.task import TaskCreate, TaskResponse, TaskStatus
-from app.schemas.flipbook import FlipbookResponse
 from app.api import tasks, flipbooks, uploads
 
 # 创建数据库表
