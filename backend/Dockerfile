@@ -32,7 +32,7 @@ EXPOSE 8000
 # 启动命令
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
 
-# .env.example
+# .env
 # 应用配置
 DEBUG=true
 SECRET_KEY=your-secret-key-change-in-production
