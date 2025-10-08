@@ -14,6 +14,8 @@ interface FileUploadProps {
 export default function FileUpload({ onUploadSuccess }: FileUploadProps) {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
+  // ✅ 添加状态来管理被拒绝的文件
+  const [rejectedFiles, setRejectedFiles] = useState<File[]>([]);
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
     if (acceptedFiles.length === 0) return;
@@ -48,8 +50,19 @@ export default function FileUpload({ onUploadSuccess }: FileUploadProps) {
     }
   }, [onUploadSuccess]);
 
-  const { getRootProps, getInputProps, isDragActive, rejectedFiles } = useDropzone({
+  // ✅ 添加 onDropRejected 回调
+  const onDropRejected = useCallback((fileRejections: any) => {
+    // fileRejections 是一个数组，包含被拒绝的文件及其原因
+    console.log('Rejected files:', fileRejections);
+    // 你可以选择显示错误信息
+    toast.error('文件格式不支持或文件过大');
+    // 更新状态，触发重新渲染
+    setRejectedFiles(fileRejections.map((fr: any) => fr.file));
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
+    onDropRejected, // ✅ 注册 rejected 回调
     accept: {
       'application/pdf': ['.pdf'],
       'application/vnd.ms-powerpoint': ['.ppt'],
@@ -111,6 +124,7 @@ export default function FileUpload({ onUploadSuccess }: FileUploadProps) {
         </div>
       </motion.div>
 
+      {/* ✅ 现在 rejectedFiles 是一个状态变量，不会为 undefined */}
       {rejectedFiles.length > 0 && (
         <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
           <div className="flex items-center space-x-2">

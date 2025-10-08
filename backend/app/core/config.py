@@ -7,8 +7,10 @@ class Settings(BaseSettings):
     SECRET_KEY: str = "your-secret-key-change-in-production"
     
     # 数据库配置
-    DATABASE_URL: str = "sqlite:///./flipbook.db"
-    
+    #DATABASE_URL: str = "sqlite:///./flipbook.db"
+    #DATABASE_URL: str = "postgres://postgres.oznqccgscsbzhwmidatu:iwAduHRpXd0kZuKX@aws-0-us-east-1.pooler.supabase.com:6543/postgres?sslmode=require&supa=base-pooler.x"
+    DATABASE_URL: str = "postgresql://postgres.oznqccgscsbzhwmidatu:iwAduHRpXd0kZuKX@aws-0-us-east-1.pooler.supabase.com:5432/postgres"
+
     # Cloudflare R2配置 (Mock标记 - 需要在部署时配置)
     R2_ACCESS_KEY_ID: str = "MOCK_R2_ACCESS_KEY"  # TODO: 配置真实的R2访问密钥
     R2_SECRET_ACCESS_KEY: str = "MOCK_R2_SECRET_KEY"  # TODO: 配置真实的R2密钥
